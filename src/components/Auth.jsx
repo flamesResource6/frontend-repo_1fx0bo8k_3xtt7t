@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useI18n } from './I18n'
 
 const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
@@ -24,8 +25,7 @@ const dict = {
     myAppts: 'My appointments',
     logout: 'Logout',
     verifying: 'Please wait...',
-    emailHint: 'Enter your email and the code we sent to you.',
-    lang: 'العربية'
+    emailHint: 'Enter your email and the code we sent to you.'
   },
   ar: {
     tabs: { login: 'تسجيل الدخول', register: 'إنشاء حساب', verify: 'تفعيل' },
@@ -48,16 +48,15 @@ const dict = {
     myAppts: 'مواعيدي',
     logout: 'تسجيل الخروج',
     verifying: 'يرجى الانتظار...',
-    emailHint: 'أدخل بريدك الإلكتروني والرمز الذي أرسلناه إليك.',
-    lang: 'English'
+    emailHint: 'أدخل بريدك الإلكتروني والرمز الذي أرسلناه إليك.'
   }
 }
 
 export default function Auth() {
-  const [mode, setMode] = useState('login') // login | register | verify
-  const [lang, setLang] = useState('en')
+  const { lang, dir } = useI18n()
   const t = useMemo(() => dict[lang], [lang])
 
+  const [mode, setMode] = useState('login') // login | register | verify
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -206,16 +205,13 @@ export default function Auth() {
   }
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto" dir={dir}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex gap-2">
           <TabButton active={mode==='login'} onClick={() => setMode('login')}>{t.tabs.login}</TabButton>
           <TabButton active={mode==='register'} onClick={() => setMode('register')}>{t.tabs.register}</TabButton>
           <TabButton active={mode==='verify'} onClick={() => setMode('verify')}>{t.tabs.verify}</TabButton>
         </div>
-        <button onClick={() => setLang(lang==='en'?'ar':'en')} className="text-xs text-slate-300 hover:text-white underline">
-          {t.lang}
-        </button>
       </div>
 
       <div className="p-6 rounded-2xl bg-gradient-to-b from-white/5 to-white/0 border border-white/10 shadow-xl">
@@ -234,11 +230,11 @@ export default function Auth() {
               <form onSubmit={handleLogin} className="space-y-3">
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.email}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
+                  <input dir={dir} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.password}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
+                  <input dir={dir} type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
                 </div>
                 {error && <p className="text-rose-300 text-sm">{error}</p>}
                 {info && <p className="text-emerald-300 text-sm">{info}</p>}
@@ -250,19 +246,19 @@ export default function Auth() {
               <form onSubmit={handleRegister} className="space-y-3">
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.name}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} value={name} onChange={e=>setName(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" />
+                  <input dir={dir} value={name} onChange={e=>setName(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.phone}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} value={phone} onChange={e=>setPhone(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" />
+                  <input dir={dir} value={phone} onChange={e=>setPhone(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.email}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
+                  <input dir={dir} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.password}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
+                  <input dir={dir} type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
                 </div>
                 {error && <p className="text-rose-300 text-sm">{error}</p>}
                 {info && <p className="text-emerald-300 text-sm">{info}</p>}
@@ -275,11 +271,11 @@ export default function Auth() {
                 <p className="text-xs text-slate-400">{t.emailHint}</p>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.email}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
+                  <input dir={dir} type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white" required />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-300 mb-1">{t.verificationCode}</label>
-                  <input dir={lang==='ar'?'rtl':'ltr'} value={code} onChange={e=>setCode(e.target.value)} placeholder={t.codePlaceholder} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white tracking-[0.25em]" required />
+                  <input dir={dir} value={code} onChange={e=>setCode(e.target.value)} placeholder={t.codePlaceholder} className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white tracking-[0.25em]" required />
                 </div>
                 <div className="flex items-center justify-between">
                   <button type="button" onClick={handleResend} disabled={cooldown>0} className={`text-xs ${cooldown>0? 'text-slate-500' : 'text-slate-300 hover:text-white'}`}>
